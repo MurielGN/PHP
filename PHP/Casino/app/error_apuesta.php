@@ -1,0 +1,1 @@
+<p>Error: no dispone de <?=$apuestaCant?> euros disponibles.</p>
