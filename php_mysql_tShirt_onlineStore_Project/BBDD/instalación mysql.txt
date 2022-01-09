@@ -1,0 +1,92 @@
+Instalación de Mysql en windows
+
+*mirar página del aula virtual*
+
+1. Comprobar que no existe otra versión (p.e. en un paquete XAMPP) de mysql.
+En caso contrario habría que configurar uno de los dos utilizando otro puerto que no sea por defecto (3306)
+
+2. Descargar el instalador
+Es un fichero (mysql windows isataller) de extensión msi y poco tamaño.
+
+3. Ejecutar el instalador y seleccionar instalación personalizada (custom).
+
+4. ¿que vamos a instalar?
+-Servidor de mysql
+-Herramienta gráfica llamada workbench
+-Conectores (son herramientas que nos permiten conectar mysql con otras herramientas de desarrollo)
+-Documentación y ayuda
+
+5. configuración
+-Seleccionar los productos
+-Seleccionar la casilla "Show advanced and logging options"
+-modo de logueo "Legacy" (el no recomendado)
+-Contraseña de root
+-Dejamos las opciones por defecto que son:
+	-configurar mysql como un servicio de windows
+	-iniciar mysql al iniciar windows
+-Opciones de ficheros LOG del servidor (queda fuera nuestro objetivo) Lo dejamos tal cual
+-Dejamos las opciones por defecto
+
+6. Acceder al servidor desde la terminal
+6.1. Acceder como root a través de la terminal instalada en el grupo de programas de mysql en windows
+Esta opción solo me permite acceder como root y desde el directorio en el que está instalado el servidor
+
+6.2. Acceder con cualquier usuario y desde cualquier directorio
+- añadir a la variable de entorno PATH del sistema, la ruta del servidor (c:\Program Files\MYSQL\MYSQL Server 8.0\bin)
+- acceder mediante el intérprete de comandos de windows(CMD) con la cadena de conexión de siempre (mysql -u usuario -pcontraseña)
+
+CREACIÓN DE ESQUEMAS DE BBDD EN WORKBENCH
+1. creamos una nueva conexión al servidor con un usuario y una base de datos. para ello:
+
+a) usando la terminal (como root):
+	-crear un usuario y una base de datos
+	-otorgar todos los privilegios sobre la bd con el nuevo usuario
+
+b) en la pantalla de inicio de workbench añado una nueva conexión (botón + junto a Mysql Connections)
+
+2. Del modelo físico al lógico (ingeniería inversa) y del modelo logico al fisico (ingeniería hacia adelante)
+workbench tiene una herramienta muy potente que permite obtener uno de los modelos a partir del otro.
+
+2.1 del modelo físico al logico(ingenieria inversa)
+-creamos el esquema y la conexion tal y como hemos explicado en el punto 1
+-ejecutamos los ficheros sql de creacion e insercion de datos
+-escogemos la opción del menú database--> reserve Engineer escogiendo el esquema y usuario correspondiente
+-corremos el asistente y al final en el menú model-->Relationship notation--> connect to columns
+
+2.2. del modelo lógico al físico(ingenieria hacia adelante)
+-creamos el esquema y la conexion tal y como hemos explicado en el punto 1
+-en el menú New-->New model (no olvidar cambiar el nombre mydb al nombre de nuestra bbdd) y a continuación ticamos sobre EER Diagram
+-vamos añadiendo las tablas y las relaciones (no se admiten chequeos, hay que hacerlos después con un alter table)
+-escogemos la opción del menú database--> Forward Engineer, guardando el fichero .sql
+
+3. Uso de conectores
+los conectores permiten acceder mediante herramientas de desarrollo a nuestro servidor de mysql.
+esto se utiliza para diseñar interfaces personalizadas que atacan a la bbdd.
+
+3.1. ejemplo de conexión entre access y mysql.
+podemos conectar (vincular) access a cualquiera de las bbdd de nuestro servidor mysql usando el conector ODBC(Open DataBase Connector)
+
+a)Debemos crear un DSN de usuario con el conector ODBC. esto lo hacemos sobre el SO Windows
+para ello:
+Herramientas administrativas de windows--> orígenes de datos ODBC(64 bits)
+agregar un nuevo DSN de usuario (mysql ODBC 8.0 ANSI Driver) con:
+	-nombre del DSN( es un nombre que le pongo yo)
+	-usuario, contraseña, y bbdd
+
+b) abrimos access con una bbdd en blanco
+-dentro de access nos vamos al apartado datos externos
+-en el apartado importar y vincular escogemos: nuevo origen de datos-->desde otros orígenes-->bases de datos ODBC y podemos:
+	-importar: nos traemos las tablas y los datos, pero los cambios que hacemos en access no afectan a mysql
+	-vincular: ademas de traernos tablas y datos los datos que hagamos en access afectan a mysql
+
+vistas:
+se desea crear una vista que se llama vjubil con todos los datos de los empleados que cumplan 65 años en 2021.
+crear usuario ordenador y otorgarle los privilegios.
+a continuacion crear una conexion a acces con este usuario ordenador sobre la vista.
+crear otra vista que se llame vemple en la que aparezca todos los datos de los empleados que pertenezcan al departamento PERSONAL
+otorgar privilegios al usuario operador sobre la nueva vista.
+
+Ejercicio:
+crear una bbdd empleados 
+consultas:
+cuantas ciudades en total hay en la bbdd de paises africanos o europeos.

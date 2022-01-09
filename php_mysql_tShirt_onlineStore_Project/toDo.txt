@@ -1,0 +1,10 @@
+1º    Add User management (Administrator)
+2º    User Management (Normal User)
+3º    Improve category management
+4º    Product Management.
+5º    Products on offer.
+6º    Manage the Stock of products
+7º    Include a paging system in the list of products.
+8º    Generate a PDF when processing the order.
+9º    Improve order management
+10º   Include any other functionality or improvement that occurs to you after consulting the teacher 
