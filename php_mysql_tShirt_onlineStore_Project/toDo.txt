@@ -8,3 +8,6 @@
 8º    Generate a PDF when processing the order.
 9º    Improve order management
 10º   Include any other functionality or improvement that occurs to you after consulting the teacher 
+
+
+3) Implementar editar stock y comprobar si se quiere eliminar una categoría
