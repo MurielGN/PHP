@@ -4,21 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>Etienda</title>
 </head>
 <body>
     <center>
-        <h1>CONTROL DE ACCESO E-COMERCIO</h1>
-            <form name='entrada' method="POST" action="./controlpedido.php">
-            <table>
-                <tr>
-                    <td>Nombre de cliente: </td><td><input type="text" name="name"></td>
-                </tr>
-                <tr>
-                    <td>Contraseña: </td><td><input type="text" name="pswd"></td>
-                </tr>
-            </table>
-        </form>
+        <div class="container">
+            <h1>CONTROL DE ACCESO E-COMERCIO</h1>
+                <form name='entrada' method="POST" action="./controlpedido.php">
+                <table>
+                    <tr>
+                        <td>Nombre de cliente: </td><td><input type="text" name="name"></td>
+                    </tr>
+                    <tr>
+                        <td>Contraseña: </td><td><input type="text" name="pswd"></td>
+                    </tr>
+                </table>
+                <br>
+                <button type="input" name="orden" class="btn btn-primary" value="ENTRAR">ENTRAR</button>
+            </form>
+        </div>
     </center>
 </body>
 </html>

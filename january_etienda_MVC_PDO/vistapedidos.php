@@ -34,6 +34,12 @@
                                 <td><?= $values->precio ?></td>
                             </tr>
                         <?php endforeach; ?>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Total:</td>
+                            <td><?= $totalPedidos ?></td>
+                        </tr>
                 </table>
             <?php endif ?>
         </div>

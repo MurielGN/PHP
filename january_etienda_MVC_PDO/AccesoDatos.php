@@ -27,25 +27,48 @@ class AccesoDatos {
         } catch (PDOException $e){
             echo "Error de conexión ".$e->getMessage();
             exit();
-        }
-        // Construyo la consulta
-        //$this->stmt = $this->dbh->prepare("SELECT * FROM `clientes` WHERE nombre = ? AND clave = ? ");
-        
+        }        
     }
-    
-    // Devuelvo la lista de Clientes
-    public function obtenerListaClientes ($puntos):array {
-        $tclientes = [];
-        $this->stmt->bindValue(1,$puntos);
+
+    public function checkPswd($name, $pswd){
+        $pass = null;
+        $this->stmt = $this->dbh->prepare("SELECT * FROM `clientes` WHERE nombre = ? AND clave = ? ");
+        $this->stmt->bindValue(1,$name);
+        $this->stmt->bindValue(2,$pswd);
         // Devuelvo una tabla asociativa
         $this->stmt->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
         // Devuelve objectos clientes llamando a constructor y a métodos setter
         if ( $this->stmt->execute() ){
-            while ( $cli = $this->stmt->fetch()){
-               $tclientes[]= $cli;
+            if ( $cli = $this->stmt->fetch()){
+               $pass = $cli;
             }
         }
-        return $tclientes;
+        return $pass;
+    }
+
+    public function aumentarVecesUsuario($id):bool{
+        //Sentencia precompilada
+        $this->stmt = $this->dbh->prepare("UPDATE clientes SET veces = veces +1 WHERE cod_cliente = ? ");
+        $this->stmt->bindValue(1,$id);
+        if($this->stmt->execute()){
+            return true;
+        }
+        return false;
+    }
+
+    public function obtenerListaPedidos($id):array{
+        $tpedidos = [];
+        $this->stmt = $this->dbh->prepare("SELECT * FROM `pedidos` WHERE cod_cliente = ? ");
+        $this->stmt->bindValue(1, $id);
+        // Devuelvo una tabla asociativa
+        $this->stmt->setFetchMode(PDO::FETCH_CLASS, 'Pedido');
+        // Devuelve objectos clientes llamando a constructor y a métodos setter
+        if($this->stmt->execute()){
+            while($ped = $this->stmt->fetch()){
+                $tpedidos[] = $ped;
+            }
+        }
+        return $tpedidos;
     }
     
      // Evito que se pueda clonar el objeto.

@@ -1,3 +1,7 @@
 SELECT *
 FROM `clientes` 
 WHERE nombre = 'miguel' AND clave = 123456
+
+probar rowCount
+
+closeCursor
