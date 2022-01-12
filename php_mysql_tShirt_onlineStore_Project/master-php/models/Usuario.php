@@ -145,20 +145,26 @@ class Usuario{
 		foreach($arrIdPedidos as $idPedido){
 			$sql1[] = "DELETE FROM lineas_pedidos WHERE pedido_id = {$idPedido[0]}";
 		}
-		$sql2 = "DELETE FROM pedidos WHERE usuario_id = $id;";
-		$sql3 = "DELETE FROM usuarios WHERE id = $id;";
+		$sql2 = "DELETE FROM pedidos WHERE usuario_id = $'{$id}';";
+		$sql3 = "DELETE FROM usuarios WHERE id = $'{$id}';";
 
+		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+		//$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		try{
+			$this->db->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 			for($i=0;$i<count($sql1);$i++){
 				$this->db->query($sql1[$i]);
 			}
 			$this->db->query($sql2);
 			$this->db->query($sql3);
 
-		} catch (Exception $e){
-			$this->db->rollback();
+		} catch (mysqli_sql_exception $e){
+			$this->db->rollback();//no ha funciona
 			return false;
 		}
+
+		$this->bd->commit();
+		$this->bd->close();
 
 		return true;
 	}
