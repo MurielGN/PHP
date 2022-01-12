@@ -9,6 +9,8 @@ class Usuario{
 	private $rol;
 	private $imagen;
 	private $db;
+	//My code
+
 	
 	public function __construct() {
 		$this->db = Database::connect();
@@ -104,6 +106,13 @@ class Usuario{
 		
 		return $result;
 	}
+
+	//My code
+	public function getAll(){
+		$usuario = $this->db->query("SELECT u.id, nombre, apellidos, email, rol, (SELECT sum(coste) FROM `pedidos` WHERE usuario_id = u.id) AS 'Coste_Pedidos', (SELECT count(*) FROM `pedidos` WHERE usuario_id = u.id AND estado = 'sended') AS 'Pendientes' FROM `usuarios` u ORDER by id DESC ");
+		return $usuario;
+	}
+	//End my code
 	
 	
 	

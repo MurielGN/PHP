@@ -78,5 +78,17 @@ class usuarioController{
 		session_destroy();
 		header("Location:".base_url);
 	}
+
+	//My code
+	public function gestion(){
+		Utils::isAdmin();
+		$gestion = true;
+		
+		$usuario = new Usuario();
+		$usuarios = $usuario->getAll();
+		
+		require_once 'views/usuario/mis_usuarios.php';
+	}
+	//End my code
 	
 } // fin clase
