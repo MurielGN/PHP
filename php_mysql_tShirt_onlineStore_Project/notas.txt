@@ -1,22 +1,49 @@
 1º Añadir la gestión de Usuarios (Administrador)
 
-El administrador puede ver la lista de usuarios, modificar usuarios,  borrar usuarios si no tiene pedidos pendientes, ver el importe total de los pedidos que ha realizado cada usuario, pendientes de entregar etc.
-
-
-SELECT id, nombre, apellidos, email, rol
-FROM `usuarios` 
-ORDER by id DESC
-
-
-SELECT sum(coste) FROM `pedidos` WHERE usuario_id = ?
-
-SELECT count(*) FROM `pedidos` WHERE usuario_id = 7 AND estado = 'sended'
+borrar usuarios si no tiene pedidos pendientes
 
 
 
 
-SELECT u.id, nombre, apellidos, email, rol,
-	(SELECT sum(coste) FROM `pedidos` WHERE usuario_id = u.id) AS 'Coste_Pedidos',
-    (SELECT count(*) FROM `pedidos` WHERE usuario_id = u.id AND estado = 'sended') AS 'Pendientes'
-FROM `usuarios` u 
-ORDER by id DESC
+
+SELECT DISTINCT p.id
+FROM pedidos p, lineas_pedidos l
+WHERE p.id=l.pedido_id
+AND p.usuario_id = 7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<?php $categorias = Utils::showCategorias(); ?>
+		<select name="categoria">
+			<?php while ($cat = $categorias->fetch_object()): ?>
+				<option value="<?= $cat->id ?>" <?=isset($usu) && is_object($usu) && $cat->id == $usu->categoria_id ? 'selected' : ''; ?>>
+					<?= $cat->nombre ?>
+				</option>
+			<?php endwhile; ?>
+		</select>

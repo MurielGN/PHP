@@ -9,7 +9,6 @@ class Usuario{
 	private $rol;
 	private $imagen;
 	private $db;
-	//My code
 
 	
 	public function __construct() {
@@ -111,6 +110,68 @@ class Usuario{
 	public function getAll(){
 		$usuario = $this->db->query("SELECT u.id, nombre, apellidos, email, rol, (SELECT sum(coste) FROM `pedidos` WHERE usuario_id = u.id) AS 'Coste_Pedidos', (SELECT count(*) FROM `pedidos` WHERE usuario_id = u.id AND estado = 'sended') AS 'Pendientes' FROM `usuarios` u ORDER by id DESC ");
 		return $usuario;
+	}
+
+	public function getOne(){
+		$usuario = $this->db->query("SELECT * FROM usuarios WHERE id={$this->getId()}");
+		return $usuario->fetch_object();
+	}
+
+	public function saveAdmin(){
+		$sql = "UPDATE usuarios SET nombre='{$this->getNombre()}', apellidos='{$this->getApellidos()}', email='{$this->getEmail()}', rol='{$this->getRol()}' WHERE id='{$this->getId()}';";
+		$save = $this->db->query($sql);
+		
+		$result = false;
+		if($save){
+			$result = true;
+		}
+		return $result;
+	}
+
+	public function checkPedidos(){
+		$control = false;
+		$query =  $this->db->query("SELECT * FROM `pedidos` WHERE usuario_id = '{$this->getId()}' AND estado = 'sended';");
+		if($query->num_rows == 0){
+			$control = true;
+		}
+		return $control;
+	}
+
+	public function delete(){
+		$id = $this->id;
+
+		$arrIdPedidos = $this->getLineasPedididos($id);
+		$sql1 = [];
+		foreach($arrIdPedidos as $idPedido){
+			$sql1[] = "DELETE FROM lineas_pedidos WHERE pedido_id = {$idPedido[0]}";
+		}
+		$sql2 = "DELETE FROM pedidos WHERE usuario_id = $id;";
+		$sql3 = "DELETE FROM usuarios WHERE id = $id;";
+
+		try{
+			for($i=0;$i<count($sql1);$i++){
+				$this->db->query($sql1[$i]);
+			}
+			$this->db->query($sql2);
+			$this->db->query($sql3);
+
+		} catch (Exception $e){
+			$this->db->rollback();
+			return false;
+		}
+
+		return true;
+	}
+
+	private function getLineasPedididos($id):array{
+		$arr = array();
+
+		$query = $this->db->query("SELECT DISTINCT p.id FROM pedidos p, lineas_pedidos l WHERE p.id=l.pedido_id AND p.usuario_id = '{$id}';");
+		if($query){
+			$arr = $query->fetch_all();
+		}		
+
+		return $arr;
 	}
 	//End my code
 	
