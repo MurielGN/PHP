@@ -5,6 +5,7 @@ class Usuario{
 	private $nombre;
 	private $apellidos;
 	private $email;
+	private $direccion;
 	private $password;
 	private $rol;
 	private $imagen;
@@ -29,6 +30,10 @@ class Usuario{
 
 	function getEmail() {
 		return $this->email;
+	}
+
+	function getDireccion() {
+		return $this->direccion;
 	}
 
 	function getPassword() {
@@ -56,8 +61,13 @@ class Usuario{
 	}
 
 	function setEmail($email) {
-		$this->email = $this->db->real_escape_string($email); //Que hace aqui db???
+		$this->email = $this->db->real_escape_string($email);
 	}
+
+	function setDireccion($direccion) {
+		$this->direccion = $this->db->real_escape_string($direccion);
+	}
+
 
 	function setPassword($password) {
 		$this->password = $password;
@@ -72,7 +82,7 @@ class Usuario{
 	}
 
 	public function save(){
-		$sql = "INSERT INTO usuarios VALUES(NULL, '{$this->getNombre()}', '{$this->getApellidos()}', '{$this->getEmail()}', '{$this->getPassword()}', 'user', null);";
+		$sql = "INSERT INTO usuarios VALUES(NULL, '{$this->getNombre()}', '{$this->getApellidos()}', '{$this->getEmail()}', '{$this->getPassword()}', 'user', '{$this->getImagen()}', '{$this->getDireccion()}');";
 		$save = $this->db->query($sql);
 		
 		$result = false;
@@ -178,6 +188,33 @@ class Usuario{
 		}		
 
 		return $arr;
+	}
+
+	public function updateUsuario($arrMod){
+		$textSQL = "UPDATE usuarios SET ";
+		foreach($arrMod as $attribute => $value){
+			$textSQL .= $attribute." = '".$value."', ";
+		}
+		$textSQL = substr($textSQL, 0, -2);
+		$textSQL .= " WHERE id = ".$this->getId();
+
+		$save = $this->db->query($textSQL);
+		
+		$result = false;
+		if($save){
+			$result = true;
+		}
+		return $result;
+	}
+
+	public function checkEmail($email):bool{
+		$query = $this->db->query("SELECT * FROM `usuarios` WHERE email = '{$email}'");
+
+		if ($query->num_rows > 0) {
+			return false;
+		}else{
+			return true;
+		}
 	}
 	//End my code
 	

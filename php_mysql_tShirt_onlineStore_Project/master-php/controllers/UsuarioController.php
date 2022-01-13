@@ -18,12 +18,14 @@ class usuarioController{
 			$apellidos = isset($_POST['apellidos']) ? $_POST['apellidos'] : false;
 			$email = isset($_POST['email']) ? $_POST['email'] : false;
 			$password = isset($_POST['password']) ? $_POST['password'] : false;
+			$direccion = isset($_POST['direccion']) ? $_POST['direccion'] : false;
 			
-			if($nombre && $apellidos && $email && $password){
+			if($nombre && $apellidos && $email && $password && $direccion){
 				$usuario = new Usuario();
 				$usuario->setNombre($nombre);
 				$usuario->setApellidos($apellidos);
 				$usuario->setEmail($email);
+				$usuario->setDireccion($direccion);
 				$usuario->setPassword($password);
 
 				$save = $usuario->save();
@@ -39,7 +41,7 @@ class usuarioController{
 			$_SESSION['register'] = "failed";
 		}
 		header("Location:".base_url.'usuario/registro');
-	}
+	}	
 
 	public function login(){
 		if(isset($_POST)){
@@ -48,6 +50,7 @@ class usuarioController{
 			$usuario = new Usuario();
 			$usuario->setEmail($_POST['email']);
 			$usuario->setPassword($_POST['password']);
+			
 			
 			$identity = $usuario->login();
 			
@@ -88,6 +91,17 @@ class usuarioController{
 		$usuarios = $usuario->getAll();
 		
 		require_once 'views/usuario/mis_usuarios.php';
+	}
+
+	public function gestionUsuario(){
+		Utils::isIdentity();
+		$usuario = new Usuario();
+		$usuario_id = $_SESSION['identity']->id;
+		$usuario->setId($usuario_id);
+		$usu = $usuario->getOne();
+
+
+		require_once './views/usuario/modificacion.php';
 	}
 
 	public function editar(){
@@ -162,6 +176,66 @@ class usuarioController{
 		}
 		
 		header('Location:'.base_url.'Usuario/gestion');
+	}
+
+	public function mod(){
+		if(isset($_POST)){
+			//$_SESSION['modificaciones'] = [];
+			$arrMod = [];
+
+			$nombre = empty($_POST['nombre']) ?  false : $_POST['nombre'];
+			$apellidos = empty($_POST['apellidos']) ? false : $_POST['apellidos'];
+			$email = empty($_POST['email']) ? false : $_POST['email'];
+			$direccion = empty($_POST['direccion']) ? false : $_POST['direccion'];
+			$password = empty($_POST['password']) ? false : $_POST['password'];
+			$conection = new Usuario();
+			$usuario_id = $_SESSION['identity']->id;
+			$conection->setId($usuario_id);
+			$usuario = $conection->getOne($usuario_id);
+
+			if($nombre && $nombre != $usuario->nombre){ $arrMod['nombre'] =$nombre; }
+			if($apellidos && $apellidos != $usuario->apellidos){ $arrMod['apellidos'] = $apellidos; }
+			if($email && $email != $usuario->email){
+				if($conection->checkEmail($email)){ $arrMod["email"] = $email; }
+			}
+			if($direccion && $direccion != $usuario->direccion){ $arrMod['direccion'] =$direccion; }
+			//Falta comprobar que el mail no se repite con otro usu
+			if($password && !empty($_POST['passwordN1']) && !empty($_POST['passwordN2'])){
+				if(password_verify($password, $usuario->password)  &&  $_POST['passwordN1'] == $_POST['passwordN2']){
+					$conection->setPassword($_POST['passwordN1']);
+					$arrMod['password'] = $conection->getPassword($email);
+				}
+			}	
+
+				// Guardar la imagen
+			if(isset($_FILES['imagen'])){
+				$file = $_FILES['imagen'];
+				$filename = $file['name'];
+				$mimetype = $file['type'];
+
+				if($mimetype == "image/jpg" || $mimetype == 'image/jpeg' || $mimetype == 'image/png' || $mimetype == 'image/gif'){
+					if(!is_dir('uploads/images')){
+						mkdir('uploads/images', 0777, true);
+					}
+
+					$arrMod['imagen'] = $filename;
+					move_uploaded_file($file['tmp_name'], 'uploads/images/'.$filename);
+				}
+			}
+
+			//En arrMod tengo la lista a modificar la paso a una funcion que recorra el array con tray catch y listo
+			$save = $conection->updateUsuario($arrMod);
+
+			if($save){
+				$_SESSION['userMod'] = "complete";
+				//$_SESSION['modificaciones'] = $arrMod;
+			}else{
+				$_SESSION['userMod'] = "failed";
+			}
+		}else{
+			$_SESSION['userMod'] = "failed";
+		}
+		header("Location:".base_url.'usuario/gestionUsuario');
 	}
 	//End my code
 	

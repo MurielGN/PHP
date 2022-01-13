@@ -16,6 +16,9 @@
 	
 	<label for="email">Email</label>
 	<input type="email" name="email" required/>
+
+	<label for="email">Dirección habitual de envios</label>
+	<input type="text" name="direccion" required/>
 	
 	<label for="password">Contraseña</label>
 	<input type="password" name="password" required/>
