@@ -16,15 +16,15 @@ if(isset($_GET['controller'])){
 	$nombre_controlador = $_GET['controller'].'Controller';
 
 }elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
-	$nombre_controlador = controller_default; //que es controller defatul?= productosController
+	$nombre_controlador = controller_default; 
 	
 }else{
 	show_error();
 	exit();
 }
 
-if(class_exists($nombre_controlador)){	//Existe la clase productosController
-	$controlador = new $nombre_controlador(); //Donde están estas clases??? UsuarioController.php
+if(class_exists($nombre_controlador)){
+	$controlador = new $nombre_controlador();
 	
 	if(isset($_GET['action']) && method_exists($controlador, $_GET['action'])){
 		$action = $_GET['action'];

@@ -88,20 +88,6 @@ class Producto{
 	function setImagen($imagen) {
 		$this->imagen = $imagen;
 	}
-
-	public function getAll(){
-		$productos = $this->db->query("SELECT * FROM productos ORDER BY id DESC");
-		return $productos;
-	}
-	
-	public function getAllCategory(){
-		$sql = "SELECT p.*, c.nombre AS 'catnombre' FROM productos p "
-				. "INNER JOIN categorias c ON c.id = p.categoria_id "
-				. "WHERE p.categoria_id = {$this->getCategoria_id()} "
-				. "ORDER BY id DESC";
-		$productos = $this->db->query($sql);
-		return $productos;
-	}
 	
 	public function getRandom($limit){
 		$productos = $this->db->query("SELECT * FROM productos ORDER BY RAND() LIMIT $limit");
@@ -153,5 +139,35 @@ class Producto{
 		}
 		return $result;
 	}
+	//My code
+
+	public function getAll(){
+		$productos = $this->db->query("SELECT * ,
+				(SELECT SUM(l.unidades) FROM productos p, lineas_pedidos l WHERE p.id=l.producto_id AND p.id = pr.id) as 'totalVentas'
+			FROM productos pr
+			ORDER BY totalVentas DESC");
+
+		$arrProductos = [];
+		while ($pro = $productos->fetch_object()) {
+			$arrProductos[] = $pro;
+		}
+		return $arrProductos;
+	}
+
+	public function getMaxVentas(){
+		$sql = ("SELECT SUM(sumaVentas) as maxVentas
+				FROM
+				(
+					SELECT SUM(l.unidades) as sumaVentas 
+					FROM productos p, lineas_pedidos l
+					WHERE p.id=l.producto_id
+					GROUP BY p.id
+				) T");
+		$sqlResu = $this->db->query($sql);
+		$max = $sqlResu->fetch_row();
+		return $max[0];
+		
+	}
+	//En my code
 	
 }

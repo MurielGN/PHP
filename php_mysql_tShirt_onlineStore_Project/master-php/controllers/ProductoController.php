@@ -24,15 +24,6 @@ class productoController{
 		require_once 'views/producto/ver.php';
 	}
 	
-	public function gestion(){
-		Utils::isAdmin();
-		
-		$producto = new Producto();
-		$productos = $producto->getAll();
-		
-		require_once 'views/producto/gestion.php';
-	}
-	
 	public function crear(){
 		Utils::isAdmin();
 		require_once 'views/producto/crear.php';
@@ -133,5 +124,54 @@ class productoController{
 		
 		header('Location:'.base_url.'Producto/gestion');
 	}
+
+	//My code
+	public function gestion(){
+		Utils::isAdmin();
+		
+		$producto = new Producto();
+		$arrProductos = $producto->getAll();
+		productoController::orderProducts($arrProductos);
+		$maxVent = $producto->getMaxVentas();
+		
+		require_once 'views/producto/gestion.php';
+	}
+
+	private static function orderProducts(&$arrProductos){
+		//change the order result
+		$_SESSION['orderList'] = isset($_SESSION['orderList'])? !$_SESSION['orderList'] : true;
+
+		switch ($_GET['var']) {
+
+			case 'id':
+				usort($arrProductos, function($a,$b){
+					return $_SESSION['orderList']? $a->id - $b->id : $b->id - $a->id;				
+				});break;					
+
+			case 'nombre':
+				usort($arrProductos, function ($a, $b){
+					return strnatcmp(strtolower($a->nombre), strtolower($b->nombre));
+				});
+				if($_SESSION['orderList']) $arrProductos = array_reverse($arrProductos);
+				break;
+
+			case 'precio':
+				usort($arrProductos, function($a,$b){
+					return $_SESSION['orderList']? $a->precio - $b->precio : $b->precio - $a->precio;				
+				});break;
+
+			case 'stock':
+				usort($arrProductos, function($a,$b){
+					return $_SESSION['orderList']? $a->stock - $b->stock : $b->stock - $a->stock;				
+				});break;
+			
+			case 'totalVentas':
+				usort($arrProductos, function($a,$b){
+					return $_SESSION['orderList']? $a->totalVentas - $b->totalVentas : $b->totalVentas - $a->totalVentas;				
+				});break;
+			
+		}
+	}
+	//End my code
 	
 }

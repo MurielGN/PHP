@@ -149,32 +149,34 @@ class Usuario{
 
 	public function delete(){
 		$id = $this->id;
-
-		$arrIdPedidos = $this->getLineasPedididos($id);
-		$sql1 = [];
-		foreach($arrIdPedidos as $idPedido){
-			$sql1[] = "DELETE FROM lineas_pedidos WHERE pedido_id = {$idPedido[0]}";
-		}
-		$sql2 = "DELETE FROM pedidos WHERE usuario_id = $'{$id}';";
-		$sql3 = "DELETE FROM usuarios WHERE id = $'{$id}';";
-
+		$transactionConection = new Usuario();
+		//$transactionConection->db = new mysqli("localhost", "root", "root", "tienda_master");
 		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-		//$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$transactionConection->db->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		try{
-			$this->db->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
-			for($i=0;$i<count($sql1);$i++){
-				$this->db->query($sql1[$i]);
+
+			$arrIdPedidos = $this->getLineasPedididos($id);
+			$sql1 = [];
+			foreach($arrIdPedidos as $idPedido){
+				$sql1[] = "DELETE FROM lineas_pedidos WHERE pedido_id = {$idPedido[0]}";
 			}
-			$this->db->query($sql2);
-			$this->db->query($sql3);
+			$sql2 = "DELETE FROM pedidos WHERE usuario_id = {$id};";
+			$sql3 = "DELETE FROM usuarios WHERE id = {$id};";
+
+		
+			for($i=0;$i<count($sql1);$i++){
+				$transactionConection->db->query($sql1[$i]);
+			}
+			$transactionConection->db->query($sql2);
+			$transactionConection->db->query($sql3);
 
 		} catch (mysqli_sql_exception $e){
-			$this->db->rollback();//no ha funciona
+			$transactionConection->db->rollback();
 			return false;
 		}
 
-		$this->bd->commit();
-		$this->bd->close();
+		$transactionConection->db->commit();
+		$transactionConection->db->close();
 
 		return true;
 	}

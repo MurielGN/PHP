@@ -1,0 +1,1 @@
+Esta mal abrir una conexion fuera de sitio?
