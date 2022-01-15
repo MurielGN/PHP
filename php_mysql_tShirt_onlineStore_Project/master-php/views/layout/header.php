@@ -26,9 +26,12 @@
 					</li>
 					<?php while($cat = $categorias->fetch_object()): ?>
 						<li>
-							<a href="<?=base_url?>categoria/ver&id=<?=$cat->id?>"><?=$cat->nombre?><?=$cat->totalSold?></a>
+							<a href="<?=base_url?>categoria/ver&id=<?=$cat->id?>"><?=$cat->nombre?></a>
 						</li>
 					<?php endwhile; ?>
+					<li>
+					<a href="<?=base_url?>categoria/ver&oferta=true">OFERTAS</a>
+					</li>
 				</ul>
 			</nav>
 

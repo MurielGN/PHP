@@ -4,7 +4,7 @@
 	Crear producto
 </a>
 
-<strong class="alert_green">Total de ventas realizadas: <?= $maxVent ?></strong>
+<strong>Total de ventas realizadas: <?= $maxVent ?></strong><br>
 
 
 <?php if(isset($_SESSION['producto']) && $_SESSION['producto'] == 'complete'): ?>
@@ -23,11 +23,12 @@
 	
 <table>
 	<tr>
-		<th><a href="<?=base_url?>producto/gestion?var=id">ID</a></th>
-		<th><a href="<?=base_url?>producto/gestion?var=nombre">NOMBRE</a></th>
-		<th><a href="<?=base_url?>producto/gestion?var=precio">PRECIO</a></th>
-		<th><a href="<?=base_url?>producto/gestion?var=stock">STOCK</a></th>
-		<th><a href="<?=base_url?>producto/gestion?var=totalVentas">TOTAL VENTAS</a></th>
+		<th><a href="<?=base_url?>producto/gestion&order=id">ID</a></th>
+		<th><a href="<?=base_url?>producto/gestion&order=nombre">NOMBRE</a></th>
+		<th><a href="<?=base_url?>producto/gestion&order=precio">PRECIO</a></th>
+		<th><a href="<?=base_url?>producto/gestion&order=descuento">DESCUENTO</a></th>
+		<th><a href="<?=base_url?>producto/gestion&order=stock">STOCK</a></th>
+		<th><a href="<?=base_url?>producto/gestion&order=totalVentas">TOTAL VENTAS</a></th>
 		<th>ACCIONES</th>
 
 	</tr>
@@ -36,11 +37,12 @@
 			<td><?=$arrProductos[$i]->id;?></td>
 			<td><?=$arrProductos[$i]->nombre;?></td>
 			<td><?=$arrProductos[$i]->precio;?></td>
+			<td><?=$arrProductos[$i]->descuento;?></td>
 			<td><?=$arrProductos[$i]->stock;?></td>
 			<td><?= ($arrProductos[$i]->totalVentas == NULL)? 0 : $arrProductos[$i]->totalVentas ?></td>
 			<td>
-				<a href="<?=base_url?>producto/editar&id=<?=$pro->id?>" class="button button-gestion">Editar</a>
-				<a href="<?=base_url?>producto/eliminar&id=<?=$pro->id?>" class="button button-gestion button-red">Eliminar</a>
+				<a href="<?=base_url?>producto/editar&id=<?=$arrProductos[$i]->id?>" class="button button-gestion">Editar</a>
+				<a href="<?=base_url?>producto/eliminar&id=<?=$arrProductos[$i]->id?>" class="button button-gestion button-red">Eliminar</a>
 			</td>
 		</tr>
 	<?php endfor; ?>

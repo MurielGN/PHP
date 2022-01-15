@@ -6,6 +6,7 @@ class Producto{
 	private $nombre;
 	private $descripcion;
 	private $precio;
+	private $descuento;
 	private $stock;
 	private $oferta;
 	private $fecha;
@@ -35,6 +36,10 @@ class Producto{
 
 	function getPrecio() {
 		return $this->precio;
+	}
+
+	function getDescuento() {
+		return $this->descuento;
 	}
 
 	function getStock() {
@@ -73,6 +78,10 @@ class Producto{
 		$this->precio = $this->db->real_escape_string($precio);
 	}
 
+	function setDescuento($descuento) {
+		$this->descuento = $this->db->real_escape_string($descuento);
+	}
+
 	function setStock($stock) {
 		$this->stock = $this->db->real_escape_string($stock);
 	}
@@ -100,7 +109,7 @@ class Producto{
 	}
 	
 	public function save(){
-		$sql = "INSERT INTO productos VALUES(NULL, {$this->getCategoria_id()}, '{$this->getNombre()}', '{$this->getDescripcion()}', {$this->getPrecio()}, {$this->getStock()}, null, CURDATE(), '{$this->getImagen()}');";
+		$sql = "INSERT INTO productos VALUES(NULL, {$this->getCategoria_id()}, '{$this->getNombre()}', '{$this->getDescripcion()}', {$this->getPrecio()}, {$this->getStock()}, null, CURDATE(), '{$this->getImagen()}', {$this->getDescuento()});";
 		$save = $this->db->query($sql);
 		
 		$result = false;
@@ -111,7 +120,7 @@ class Producto{
 	}
 	
 	public function edit(){
-		$sql = "UPDATE productos SET nombre='{$this->getNombre()}', descripcion='{$this->getDescripcion()}', precio={$this->getPrecio()}, stock={$this->getStock()}, categoria_id={$this->getCategoria_id()}  ";
+		$sql = "UPDATE productos SET nombre='{$this->getNombre()}', descripcion='{$this->getDescripcion()}', precio={$this->getPrecio()}, descuento={$this->getDescuento()}, stock={$this->getStock()}, categoria_id={$this->getCategoria_id()}";
 		
 		if($this->getImagen() != null){
 			$sql .= ", imagen='{$this->getImagen()}'";
@@ -165,8 +174,21 @@ class Producto{
 				) T");
 		$sqlResu = $this->db->query($sql);
 		$max = $sqlResu->fetch_row();
-		return $max[0];
-		
+		return $max[0];		
+	}
+
+	public function getAllCategory(){
+
+		$sql = ("SELECT * FROM `productos` WHERE categoria_id = {$this->categoria_id}");
+		$productos = $this->db->query($sql);
+
+		return $productos;
+	}
+
+	public function getAllOfertas(){
+		$sql = ("SELECT * FROM `productos` WHERE descuento != 0");
+		$productos = $this->db->query($sql);
+		return $productos;
 	}
 	//En my code
 	

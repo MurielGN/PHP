@@ -35,14 +35,16 @@ class productoController{
 			$nombre = isset($_POST['nombre']) ? $_POST['nombre'] : false;
 			$descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : false;
 			$precio = isset($_POST['precio']) ? $_POST['precio'] : false;
+			$descuento = isset($_POST['descuento']) ? $_POST['descuento'] : false;
 			$stock = isset($_POST['stock']) ? $_POST['stock'] : false;
 			$categoria = isset($_POST['categoria']) ? $_POST['categoria'] : false;
 			
-			if($nombre && $descripcion && $precio && $stock && $categoria){
+			if($nombre && $descripcion && $precio && $stock && $categoria && $descuento){
 				$producto = new Producto();
 				$producto->setNombre($nombre);
 				$producto->setDescripcion($descripcion);
 				$producto->setPrecio($precio);
+				$producto->setDescuento($descuento);
 				$producto->setStock($stock);
 				$producto->setCategoria_id($categoria);
 				
@@ -96,6 +98,10 @@ class productoController{
 			$producto->setId($id);
 			
 			$pro = $producto->getOne();
+
+			if($pro->id){
+				$_SESSION['editarProducto'] = $id;
+			}
 			
 			require_once 'views/producto/crear.php';
 			
@@ -141,7 +147,7 @@ class productoController{
 		//change the order result
 		$_SESSION['orderList'] = isset($_SESSION['orderList'])? !$_SESSION['orderList'] : true;
 
-		switch ($_GET['var']) {
+		switch ($_GET['order']) {
 
 			case 'id':
 				usort($arrProductos, function($a,$b){
@@ -158,6 +164,11 @@ class productoController{
 			case 'precio':
 				usort($arrProductos, function($a,$b){
 					return $_SESSION['orderList']? $a->precio - $b->precio : $b->precio - $a->precio;				
+				});break;
+			
+			case 'descuento':
+				usort($arrProductos, function($a,$b){
+					return $_SESSION['orderList']? $a->descuento - $b->descuento : $b->descuento - $a->descuento;				
 				});break;
 
 			case 'stock':

@@ -72,6 +72,12 @@ class categoriaController{
 			$producto->setCategoria_id($id);
 			$productos = $producto->getAllCategory();
 		}
+		// My code
+		if(isset($_GET['oferta']) && $_GET['oferta']){
+			
+			$producto = new Producto();
+			$productos = $producto->getAllOfertas();
+		}
 		
 		require_once 'views/categoria/ver.php';
 	}

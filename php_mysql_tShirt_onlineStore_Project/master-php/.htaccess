@@ -6,5 +6,5 @@ ErrorDocument 404 http://localhost/master-php/proyecto-php-poo/error/index
 RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteCond %{SCRIPT_FILENAME} !-f
 
-RewriteRule ^(.*)/(.*) index.php?controller=$1&action=$2 [QSA]
+RewriteRule ^(.*)/(.*) index.php?controller=$1&action=$2
 </IfModule>

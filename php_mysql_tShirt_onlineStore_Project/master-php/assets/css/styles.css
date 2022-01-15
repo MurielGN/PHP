@@ -1,3 +1,26 @@
+/*My code*/
+.product .ofertaAntigua{
+    text-decoration:line-through;
+    color: #801515;
+    font-size: 0.8em;
+}
+
+.product .ofertaNueva{
+    color: green;
+    font-size: 1.2em;
+}
+#detail-product .ofertaNueva .price{
+    color: green;
+    font-size: 1.8em;
+}
+#detail-product .ofertaAntigua .price{
+    text-decoration:line-through;
+    color: #801515;
+    font-size: 0.8em;
+}
+/*En my code*/
+
+
 /*GENERALES*/
 
 *{

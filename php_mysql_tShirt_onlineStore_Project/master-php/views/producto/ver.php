@@ -10,7 +10,18 @@
 		</div>
 		<div class="data">
 			<p class="description"><?= $product->descripcion ?></p>
-			<p class="price"><?= $product->precio ?>$</p>
+
+			<?php if($product->descuento == 0):?>
+				<p class="price"><?= $product->precio ?>$</p>
+				<?php else: ?>
+					<div id="oferta">
+						<div class="ofertaNueva"><p class="price"><?= $product->precio * (100 - $product->descuento )/100 ?></p></div>
+						<div class="ofertaAntigua"><p class="price"><?= $product->precio ?></p></div>
+					</div>
+				<?php endif; ?>
+
+			
+
 			<a href="<?=base_url?>carrito/add&id=<?=$product->id?>" class="button">Comprar</a>
 		</div>
 	</div>

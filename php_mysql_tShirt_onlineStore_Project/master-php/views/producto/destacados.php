@@ -10,7 +10,14 @@
 			<?php endif; ?>
 			<h2><?=$product->nombre?></h2>
 		</a>
-		<p><?=$product->precio?></p>
+		
+		<?php if($product->descuento == 0):?>
+			<p><?= $product->precio ?></p>
+		<?php else: ?>
+			<p class="ofertaNueva"><?= $product->precio * (100 - $product->descuento )/100 ?></p>
+			<p class="ofertaAntigua"><?= $product->precio ?></p>
+		<?php endif; ?>
+
 		<a href="<?=base_url?>carrito/add&id=<?=$product->id?>" class="button">Comprar</a>
 	</div>
 <?php endwhile; ?>

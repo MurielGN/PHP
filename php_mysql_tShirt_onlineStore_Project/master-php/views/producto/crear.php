@@ -19,6 +19,9 @@
 		<label for="precio">Precio</label>
 		<input type="text" name="precio" value="<?=isset($pro) && is_object($pro) ? $pro->precio : ''; ?>"/>
 
+		<label for="descuento">Descuento</label>
+		<input type="text" name="descuento" value="<?=isset($pro) && is_object($pro) ? $pro->descuento : ''; ?>"/>
+
 		<label for="stock">Stock</label>
 		<input type="number" name="stock" value="<?=isset($pro) && is_object($pro) ? $pro->stock : ''; ?>"/>
 
