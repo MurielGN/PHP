@@ -32,7 +32,7 @@
 		<th>ACCIONES</th>
 
 	</tr>
-	<?php for($i = 0; $i<count($arrProductos); $i++): ?>
+	<?php for($i = 0; $i< count($arrProductos); $i++): ?>
 		<tr>
 			<td><?=$arrProductos[$i]->id;?></td>
 			<td><?=$arrProductos[$i]->nombre;?></td>
@@ -47,3 +47,15 @@
 		</tr>
 	<?php endfor; ?>
 </table>
+<div id='paginacion'>
+	<div class="container" id="centro">
+	<ul class="pagination">
+		<li><a href="<?=base_url?>producto/gestion&pag=principio">Principio</a></li>
+		<li><a href="<?=base_url?>producto/gestion&pag=anterior">&larr;</a></li>
+		<li class="active"><a href="#"><?= $_SESSION['pag'] ?></a></li>
+		<li><a href="<?=base_url?>producto/gestion&pag=siguiente">&rarr;</a></li>
+		<li><a href="<?=base_url?>producto/gestion&pag=final">Final</a></li>
+	</ul>
+	</div>
+</div>
+

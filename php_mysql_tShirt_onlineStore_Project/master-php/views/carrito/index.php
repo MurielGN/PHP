@@ -1,4 +1,7 @@
 <h1>Carrito de la compra</h1>
+<?php if(isset($_SESSION['SinStock'])): ?>
+	<strong class="alert_red">Stock insuficinete del producto: <?= $producto->nombre ?></strong>
+<?php endif; ?>
 
 <?php if(isset($_SESSION['carrito']) && count($_SESSION['carrito']) >= 1): ?>
 <table>
@@ -26,13 +29,28 @@
 			<a href="<?= base_url ?>producto/ver&id=<?=$producto->id?>"><?=$producto->nombre?></a>
 		</td>
 		<td>
-			<?=$producto->precio?>
+			<?php if($producto->descuento > 0):?>
+				<?=$producto->precio * (100 - $producto->descuento)/100?>
+			<?php else: ?>
+				<?=$producto->precio?>
+			<?php endif;?>
 		</td>
 		<td>
-			<?=$elemento['unidades']?>
+			<?php if(isset($_SESSION['SinStock'])):?>
+				<?= $_SESSION['SinStock'] ?>
+				<?php unset($_SESSION['SinStock']);?>
+			<?php else: ?>
+				<?=$elemento['unidades']?>
+			<?php endif; ?>
+
 			<div class="updown-unidades">
-				<a href="<?=base_url?>carrito/up&index=<?=$indice?>" class="button">+</a>
-				<a href="<?=base_url?>carrito/down&index=<?=$indice?>" class="button">-</a>
+				<?php if($producto->stock <= $elemento['unidades']): ?>
+					<a class="button">+</a>
+					<a href="<?=base_url?>carrito/down&index=<?=$indice?>" class="button">-</a>
+				<?php else: ?>
+					<a href="<?=base_url?>carrito/up&index=<?=$indice?>" class="button">+</a>
+					<a href="<?=base_url?>carrito/down&index=<?=$indice?>" class="button">-</a>
+				<?php endif; ?>
 			</div>
 		</td>
 		<td>

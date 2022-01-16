@@ -21,8 +21,11 @@
 				<?php endif; ?>
 
 			
-
-			<a href="<?=base_url?>carrito/add&id=<?=$product->id?>" class="button">Comprar</a>
+			<?php if($product->stock > 0):?>
+				<a href="<?=base_url?>carrito/add&id=<?=$product->id?>" class="button">Comprar</a>
+			<?php else: ?>
+				<a" class="button button-gestion button-red">SIN STOCK</a>
+			<?php endif; ?>
 		</div>
 	</div>
 <?php else: ?>

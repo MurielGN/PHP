@@ -14,7 +14,12 @@
 		<input type="text" name="localidad" required />
 		
 		<label for="direccion">Dirección</label>
-		<input type="text" name="direccion" required />
+		<?php if(empty($_SESSION['identity']->direccion)):?>
+			<input type="text" name="direccion" required />
+		<?php else:?>
+			<input type="text" name="direccion" required value="<?= $_SESSION['identity']->direccion ?>"/>
+		<?php endif;?>
+		
 		
 		<input type="submit" value="Confirmar pedido" />
 	</form>

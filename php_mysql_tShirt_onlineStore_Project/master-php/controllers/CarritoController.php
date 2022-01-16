@@ -1,5 +1,7 @@
 <?php
 require_once 'models/Producto.php';
+require_once 'models/Categoria.php';
+require_once 'models/Producto.php';
 
 class carritoController{
 	
@@ -23,8 +25,15 @@ class carritoController{
 			$counter = 0;
 			foreach($_SESSION['carrito'] as $indice => $elemento){
 				if($elemento['id_producto'] == $producto_id){
-					$_SESSION['carrito'][$indice]['unidades']++;
-					$counter++;
+					$conexion = new Producto();
+					$chekStock = $conexion->getOne($producto_id);
+					if($_SESSION['carrito'][$indice]['unidades'] < $chekStock->stock){
+						$_SESSION['carrito'][$indice]['unidades']++;
+						$counter++;
+					}else{
+						break;//Provisional
+					}					
+					
 				}
 			}	
 		}
@@ -34,6 +43,11 @@ class carritoController{
 			$producto = new Producto();
 			$producto->setId($producto_id);
 			$producto = $producto->getOne();
+
+			if($producto->stock <= $counter || $producto->stock == 0){
+				header('Location:'.base_url); //Provisional
+				exit();
+			}
 
 			// Añadir al carrito
 			if(is_object($producto)){

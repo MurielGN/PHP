@@ -190,6 +190,17 @@ class Producto{
 		$productos = $this->db->query($sql);
 		return $productos;
 	}
+
+	public function updateStock(){
+		$sql = "UPDATE productos SET stock = stock - {$this->getStock()} WHERE id = {$this->getId()}";
+		$save = $this->db->query($sql);
+		
+		$result = false;
+		if($save){
+			$result = true;
+		}
+		return $result;
+	}
 	//En my code
 	
 }

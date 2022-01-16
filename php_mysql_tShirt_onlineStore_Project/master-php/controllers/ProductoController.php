@@ -137,17 +137,34 @@ class productoController{
 		
 		$producto = new Producto();
 		$arrProductos = $producto->getAll();
+
 		productoController::orderProducts($arrProductos);
 		$maxVent = $producto->getMaxVentas();
-		
+
+
+		if(!isset($_SESSION['pag'])){
+			$_SESSION['pag'] = 1;
+		}else{
+			if(isset($_GET['pag'])){
+				self::getPag($arrProductos);
+			}else{
+				$_SESSION['pag'] = 1;
+			}
+		}
+
+		$arrProductos = self::sliceArr($arrProductos, 5);
+
 		require_once 'views/producto/gestion.php';
 	}
 
 	private static function orderProducts(&$arrProductos){
 		//change the order result
-		$_SESSION['orderList'] = isset($_SESSION['orderList'])? !$_SESSION['orderList'] : true;
+		if(isset($_GET['order'])){
+			$_SESSION['orderList'] = isset($_SESSION['orderList'])? !$_SESSION['orderList'] : true;
+			$_SESSION['order'] = $_GET['order'];
+		}
 
-		switch ($_GET['order']) {
+		switch ($_SESSION['order']) {
 
 			case 'id':
 				usort($arrProductos, function($a,$b){
@@ -182,6 +199,46 @@ class productoController{
 				});break;
 			
 		}
+	}
+
+	private static function getPag($arrProductos){
+		$maxPag = floor(count($arrProductos)/5);
+		if(count($arrProductos)%5 != 0) $maxPag++;
+
+		switch ($_GET['pag']) {
+			case 'principio':
+				$_SESSION['pag'] = 1;
+				break;
+
+			case 'anterior':
+				if($_SESSION['pag'] > 1){
+					$_SESSION['pag']--;
+				}
+				break;
+
+			case 'siguiente':
+				if($_SESSION['pag'] < $maxPag) $_SESSION['pag']++;
+				break;
+				
+			case 'final':
+				$_SESSION['pag'] = $maxPag;
+				break;
+		}
+		//$arrAux = array_chunk($arrProductos, 5);
+		//$arrProductos = $arrAux[$_SESSION['pag']-1];
+
+		/*$inicio = 5 * ($_SESSION['pag']-1);
+		$final = (5 * $_SESSION['pag']);
+		$arrAux = array_slice($arrProductos, $inicio, $final);
+		$arrProductos = $arrAux;*/
+	}
+
+	private static function sliceArr($arr, $size):array{
+		$arrResu = [];
+		$arrResu = array_chunk($arr, $size);
+
+		return $arrResu[$_SESSION['pag']-1];
+
 	}
 	//End my code
 	

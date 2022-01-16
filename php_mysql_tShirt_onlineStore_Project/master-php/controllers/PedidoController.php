@@ -1,9 +1,21 @@
 <?php
 require_once 'models/Pedido.php';
+require_once 'models/Categoria.php';
+require_once 'models/Producto.php';
 
 class pedidoController{
 	
 	public function hacer(){
+
+		$conexion = new Producto();
+		foreach ($_SESSION['carrito'] as $productoCarrito) {
+			$conexion->setId($productoCarrito['id_producto']);
+			$producto = $conexion->getOne();
+			if($producto->stock < $productoCarrito['unidades']){
+				$_SESSION['SinStock'] = $producto->stock;
+				require_once 'views/carrito/index.php';
+			}
+		}
 		
 		require_once 'views/pedido/hacer.php';
 	}
@@ -27,12 +39,23 @@ class pedidoController{
 				$pedido->setDireccion($direccion);
 				$pedido->setCoste($coste);
 				
+				//Habría que hacer esto traccsacional*******
 				$save = $pedido->save();
 				
 				// Guardar linea pedido
 				$save_linea = $pedido->save_linea();
+
+				//Descontar el stock
+				$conexionProducto = new Producto();
+				foreach ($_SESSION['carrito'] as $productoCarrito) {
+					$conexionProducto->setId($productoCarrito['id_producto']);
+					$conexionProducto->setStock($productoCarrito['unidades']);
+					$producto = $conexionProducto->updateStock();
+					if(!$producto) break;
+				}
 				
-				if($save && $save_linea){
+				
+				if($save && $save_linea && $producto){
 					$_SESSION['pedido'] = "complete";
 					
 					//header("Location:".base_url-"carrito/delete_all);

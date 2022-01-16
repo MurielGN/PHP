@@ -18,6 +18,16 @@
     color: #801515;
     font-size: 0.8em;
 }
+#paginacion{
+    margin: auto;
+}
+#centro.container{
+    width: auto;
+}
+.container .pagination {
+    text-align: center;
+    margin-left: 30%;    
+}
 /*En my code*/
 
 
