@@ -150,6 +150,17 @@ class pedidoController{
 			header("Location:".base_url);
 		}
 	}
+
+	public function albaran(){
+		$conexion = new Pedido();
+		$id = $_GET['id'];
+		$conexion->setId($id);
+
+		$pedido = $conexion->getOne();
+		
+
+		$conexion->getAlbaran();
+	}
 	
 	
 }

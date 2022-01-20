@@ -9,6 +9,7 @@
 		<th>Coste</th>
 		<th>Fecha</th>
 		<th>Estado</th>
+		<th></th>
 	</tr>
 	<?php
 	while ($ped = $pedidos->fetch_object()):
@@ -26,6 +27,14 @@
 			</td>
 			<td>
 				<?=Utils::showStatus($ped->estado)?>
+			</td>
+			<td>
+				<?php if($_SESSION['admin']): ?>
+					<a href="<?=base_url?>pedido/albaran&id=<?= $ped->id ?>" class="button button-gestion">Abaran</a>
+				<?php else: ?>
+					<a href="<?=base_url?>pedido/detalle&id=<?= $ped->id ?>" class="button button-gestion">Detalles</a>
+				<?php endif; ?>
+
 			</td>
 		</tr>
 
