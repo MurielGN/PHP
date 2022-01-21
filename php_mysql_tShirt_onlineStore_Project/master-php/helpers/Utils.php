@@ -60,8 +60,10 @@ class Utils{
 			$value = 'En preparación';
 		}elseif($status == 'ready'){
 			$value = 'Preparado para enviar';
-		}elseif($status = 'sended'){
+		}elseif($status == 'sended'){
 			$value = 'Enviado';
+		}elseif($status == 'cancelled'){
+			$value = 'Cancelado';
 		}
 		
 		return $value;

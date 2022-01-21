@@ -95,7 +95,10 @@ class Pedido{
 	}
 	
 	public function getOne(){
-		$producto = $this->db->query("SELECT * FROM pedidos WHERE id = {$this->getId()}");
+		$producto = $this->db->query("SELECT p.*, u.nombre, u.apellidos
+									FROM pedidos p, usuarios u
+									WHERE p.usuario_id=u.id
+									AND p.id = {$this->getId()}");
 		return $producto->fetch_object();
 	}
 	

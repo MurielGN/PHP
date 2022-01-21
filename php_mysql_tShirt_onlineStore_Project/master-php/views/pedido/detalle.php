@@ -1,5 +1,12 @@
 <h1>Detalle del pedido</h1>
 
+<?php if(isset($_SESSION['cancelado']) && $_SESSION['cancelado']): ?>
+	<strong class="alert_green">El pedido se ha cancelado correctamente</strong>
+<?php elseif(isset($_SESSION['cancelado']) && !$_SESSION['producto']): ?>	
+	<strong class="alert_red">El pedido NO se ha cancelado correctamente</strong>
+<?php endif; ?>
+<?php Utils::deleteSession('cancelado'); ?>
+
 <?php if (isset($pedido)): ?>
 		<?php if(isset($_SESSION['admin'])): ?>
 			<h3>Cambiar estado del pedido</h3>
@@ -17,12 +24,24 @@
 		<?php endif; ?>
 
 		<h3>Dirección de envio</h3>
+		Nombre: <?= $pedido->nombre ?> <?= $pedido->nombre ?> <br>
 		Provincia: <?= $pedido->provincia ?>   <br/>
 		Cuidad: <?= $pedido->localidad ?> <br/>
 		Direccion: <?= $pedido->direccion ?>   <br/><br/>
 
 		<h3>Datos del pedido:</h3>
+		Fecha del pedido: <?= $pedido->fecha ?>  <br>
 		Estado: <?=Utils::showStatus($pedido->estado)?> <br/>
+
+		<?php if($pedido->estado == "sended"): ?>
+			Fecha estimada de reparto:  <?= $fechaEnvio ?>  <br>
+		<?php elseif($pedido->estado == "cancelled"): ?>
+		<?php else:?>
+			<div style="width: 100px;">
+				<a href="<?=base_url?>pedido/cancelar&id=<?=$pedido->id?>" class="button button-gestion button-red">CANCELAR</a> <br>
+			</div>
+		<?php endif; ?>
+
 		Número de pedido: <?= $pedido->id ?>   <br/>
 		Total a pagar: <?= $pedido->coste ?> $ <br/>
 		Productos:

@@ -2,5 +2,3 @@ tienda_master
 
 Importante: Al final hacer todas las modifiaciones a las BBDD, como añadir columnas etc
 
-
-

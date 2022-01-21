@@ -74,7 +74,7 @@ class pedidoController{
 		}
 	}
 	
-	public function confirmado(){ //AQUI ***********
+	public function confirmado(){ 
 		if(isset($_SESSION['identity'])){
 			$identity = $_SESSION['identity'];
 			$pedido = new Pedido();
@@ -84,7 +84,7 @@ class pedidoController{
 			
 			$pedido_productos = new Pedido();
 			$productos = $pedido_productos->getProductosByPedido($pedido->id);
-			unset($_SESSION['carrito']); //Muriel
+			unset($_SESSION['carrito']); 
 		}
 		require_once 'views/pedido/confirmado.php';
 	}
@@ -104,6 +104,7 @@ class pedidoController{
 	public function detalle(){
 		Utils::isIdentity();
 		
+
 		if(isset($_GET['id'])){
 			$id = $_GET['id'];
 			
@@ -111,15 +112,34 @@ class pedidoController{
 			$pedido = new Pedido();
 			$pedido->setId($id);
 			$pedido = $pedido->getOne();
+
+			if($pedido->usuario_id != $_SESSION['identity']->id){
+				header('Location:'.base_url.'pedido/mis_pedidos');
+				exit();
+			}
+
+			$fechaEnvio = pedidoController::setFechEnv($pedido->fecha);
 			
 			// Sacar los poductos
 			$pedido_productos = new Pedido();
 			$productos = $pedido_productos->getProductosByPedido($id);
+
+			// Sacar nombre del Usuario
+			
 			
 			require_once 'views/pedido/detalle.php';
 		}else{
 			header('Location:'.base_url.'pedido/mis_pedidos');
 		}
+	}
+
+	private static function setFechEnv($fecha){
+		$explode = explode('-', $fecha);
+		$fechaEnv = mktime(0,0,0,$explode[1],$explode[2],$explode[0]);
+		$fechaEnv += 2*24*3600;
+		$fechaEnv = date(DATE_ATOM,$fechaEnv);
+		$fechaEnv = substr($fechaEnv,0,10);
+		return $fechaEnv;
 	}
 	
 	public function gestion(){
@@ -144,6 +164,29 @@ class pedidoController{
 			$pedido->setId($id);
 			$pedido->setEstado($estado);
 			$pedido->edit();
+			
+			header("Location:".base_url.'pedido/detalle&id='.$id);
+		}else{
+			header("Location:".base_url);
+		}
+	}
+
+	public function cancelar(){
+		if(isset($_GET['id'])){
+			// Recoger datos form
+			$id = $_GET['id'];
+			
+			// Upadate del pedido
+			$pedido = new Pedido();
+			$pedido->setId($id);
+			$pedido->setEstado("cancelled");
+			$pedido->edit();
+
+			if($pedido){
+				$_SESSION['cancelado'] = true;
+			}else{
+				$_SESSION['cancealdo'] = false;
+			}
 			
 			header("Location:".base_url.'pedido/detalle&id='.$id);
 		}else{
