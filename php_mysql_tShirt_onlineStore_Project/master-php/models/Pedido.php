@@ -180,12 +180,115 @@ class Pedido{
 		return $result;
 	}
 
-	public function getAlbaran(){
+	public function getDatosCliente(){
+		$sql = "SELECT u.nombre, u.apellidos, u.email, p.direccion, p.provincia, p.localidad
+				FROM usuarios u, pedidos p
+				WHERE p.usuario_id=u.id  
+				AND p.id = {$this->getId()};";
+		$cliente = $this->db->query($sql);
+		return $cliente->fetch_object();
+	}
 
+	public function getDatosAlbaran(){
+		$arrDatos = [];
+		$sql = "SELECT p.fecha as fecha, pr.id as prodID, pr.nombre as prodNom, precio, unidades, precio*unidades AS total, 
+					(SELECT SUM(suma.total)
+					FROM (SELECT precio*unidades AS total
+						FROM pedidos p, lineas_pedidos l, productos pr
+					WHERE p.id=l.pedido_id AND l.producto_id=pr.id
+					AND p.id= {$this->getId()} ) AS suma) as TOTAL2
+				FROM pedidos p, lineas_pedidos l, productos pr
+				WHERE p.id=l.pedido_id AND l.producto_id=pr.id
+				AND p.id= {$this->getId()}";
+		$datos = $this->db->query($sql);
+		while ($dato = $datos->fetch_object()){
+			$arrDatos[] = $dato;
+		}
+
+		return $arrDatos;
+
+	}
+
+	public function getAlbaran($datosAlbaran, $datosCliente){
+		
 		$mpdf = new \Mpdf\Mpdf();
 		
-		$mpdf->WriteHTML('<h1>Hola mundo</h1>');
-		$mpdf->WriteHTML('<p>Soy un archivo PDF</p>');
+		$mpdf = new \Mpdf\Mpdf();
+		$mpdf->showImageErrors = true;
+		$stylesheet = file_get_contents(base_url.'assets/css/albaran.css');
+		$mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+
+		$html = "";
+
+        $mpdf->WriteHTML('<table id="cabecera">
+        <tr>
+            <td><img src="http://localhost/clase/workspace/php_mysql_tShirt_onlineStore_Project/master-php/assets/img/camiseta.png" width="100px"/></td>
+            <td><p id="titulo">Tienda de camisetas</p></td>
+            <td>    <div id="datosEmpresa">
+                <p>
+                    Tienda de Camisetas SLU <br>
+                    Avda de los Soles, 2-3, Pol.Ind. El Solar. <br>
+                    38033. Madrid. Madrid <br> 
+                    CIF: B59743159 <br>
+                </p>
+            </div></td>
+        </tr>
+    </table>
+    <hr>
+    <h4>FACTURA SIMPLIFICADA</h4>
+	<p>Datos de facturación</p>
+    <div id="datC">
+        Nombre: '.$datosCliente->nombre.' '.$datosCliente->apellidos.'<br>
+        Dirección: '.$datosCliente->direccion.'<br>
+        Pobración: '.$datosCliente->localidad.', '.$datosCliente->provincia.'<br>
+        Email: '.$datosCliente->email.'
+    </div>
+	<br><br>
+    <table>
+        <tr>
+            <td>Fecha: '.$datosAlbaran[0]->fecha.'</td>
+            <td>Forma de pago: Tarjeta</td>
+        </tr>
+    </table>
+    <br><br>
+    <table>
+        <tr>
+            <td id="pedido">Albarán del pedido '.$this->getId().':</td>
+        </tr>
+    </table>
+    <br>
+    <table>
+        <tr class="sombreado">
+            <th>Cod</th><th style="width: 50%;">Artículo</th><th>Precio</th><th style="width: 6%;">Und</th><th>Total</th>
+        </tr>');
+
+		for ($i=0; $i < count($datosAlbaran); $i++) { 
+			$code = "<tr><td>".$datosAlbaran[$i]->prodID."</td>
+					<td>".$datosAlbaran[$i]->prodNom."</td>
+					<td>".$datosAlbaran[$i]->precio."</td>
+					<td>".$datosAlbaran[$i]->unidades."</td>
+					<td>".$datosAlbaran[$i]->total."</td></tr>";
+					$mpdf->WriteHTML($code);
+		}
+
+		$mpdf->WriteHTML('</tr>
+    </table>
+    <br><br>
+    <table class="total">
+        <tr class="sombreado">
+            <th>Base Imponible</th><th>IVA</th><th colspan="2">TOTAL FACTURA</th>
+        </tr>
+        <tr>
+            <td>'.round($datosAlbaran[0]->TOTAL2 * 0.79, 2).'</td><td>(21%) '.round($datosAlbaran[0]->TOTAL2 * 0.21,2).'</td><td colspan="2">'.$datosAlbaran[0]->TOTAL2.' €</td>
+        </tr>
+    </table>
+    <table class="total">
+        <tr>
+            <td style="width: 85%;">TOTAL A PAGAR</td><td>'.$datosAlbaran[0]->TOTAL2.' €</td>
+        </tr>
+    </table>');
+	
+
 		$mpdf->Output();
 	}
 }

@@ -30,7 +30,7 @@
 			</td>
 			<td>
 				<?php if($_SESSION['admin']): ?>
-					<a href="<?=base_url?>pedido/albaran&id=<?= $ped->id ?>" class="button button-gestion">Abaran</a>
+					<a href="<?=base_url?>pedido/albaran&id=<?= $ped->id ?>" class="button button-gestion">Albaran</a>
 				<?php else: ?>
 					<a href="<?=base_url?>pedido/detalle&id=<?= $ped->id ?>" class="button button-gestion">Detalles</a>
 				<?php endif; ?>

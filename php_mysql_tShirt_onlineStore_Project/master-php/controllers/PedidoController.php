@@ -74,7 +74,7 @@ class pedidoController{
 		}
 	}
 	
-	public function confirmado(){
+	public function confirmado(){ //AQUI ***********
 		if(isset($_SESSION['identity'])){
 			$identity = $_SESSION['identity'];
 			$pedido = new Pedido();
@@ -156,10 +156,11 @@ class pedidoController{
 		$id = $_GET['id'];
 		$conexion->setId($id);
 
-		$pedido = $conexion->getOne();
+		$datosAlbaran = $conexion->getDatosAlbaran();
+		$datosCliente = $conexion->getDatosCliente();
 		
 
-		$conexion->getAlbaran();
+		$conexion->getAlbaran($datosAlbaran, $datosCliente);
 	}
 	
 	

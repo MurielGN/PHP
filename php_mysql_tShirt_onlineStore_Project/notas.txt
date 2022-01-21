@@ -3,7 +3,4 @@ tienda_master
 Importante: Al final hacer todas las modifiaciones a las BBDD, como añadir columnas etc
 
 
-8º Generar un PDF al tramitar el pedido.
-
-Generar un PDF cuando el administrador lo solicite sobre un pedido determinado, este PDF podría servir como un albarán de entrega de la mercancía. Utilizar una extensión para implementar esta funcionalidad.
 
