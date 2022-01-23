@@ -7,11 +7,10 @@
 
 .product .ofertaNueva{
     color: green;
-    font-size: 1.2em;
 }
 #detail-product .ofertaNueva .price{
     color: green;
-    font-size: 1.8em;
+    font-size: 1 rem;
 }
 #detail-product .ofertaAntigua .price{
     text-decoration:line-through;
@@ -28,6 +27,21 @@
     text-align: center;
     margin-left: 30%;    
 }
+.sinStock{
+    background: red;
+    color: white !important;
+    text-decoration: none;
+    display: block;
+    border-radius: 2px;
+    width: auto;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    border: 1px solid black;
+    cursor:pointer;
+}
+
 /*En my code*/
 
 
