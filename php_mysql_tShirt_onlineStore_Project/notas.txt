@@ -2,3 +2,19 @@ tienda_master
 
 Importante: Al final hacer todas las modifiaciones a las BBDD, como añadir columnas etc
 
+
+Success!
+
+    Note: To complete installation, ensure `eb` is in PATH. You can ensure this by executing:
+
+    1. Bash:
+
+       echo 'export PATH="/home/arson/.ebcli-virtual-env/executables:$PATH"' >> ~/.bash_profile && source ~/.bash_profile
+
+    2. Zsh:
+
+       echo 'export PATH="/home/arson/.ebcli-virtual-env/executables:$PATH"' >> ~/.zshenv && source ~/.zshenv
+
+
+root
+rootroot
