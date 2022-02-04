@@ -19,6 +19,18 @@ class pedidoController{
 		
 		require_once 'views/pedido/hacer.php';
 	}
+
+	private static function checkCarrito($carrito){
+		$conexion = new Producto();
+		foreach ($carrito as $productoC) {
+			$producto = $conexion->getOne();
+			if($producto->stock < $productoC['unidades']){
+				return false;
+			}
+		}
+
+		return true;
+	}
 	
 	public function add(){
 		if(isset($_SESSION['identity'])){
@@ -30,7 +42,7 @@ class pedidoController{
 			$stats = Utils::statsCarrito();
 			$coste = $stats['total'];
 				
-			if($provincia && $localidad && $direccion){
+			if($provincia && $localidad && $direccion && pedidoController::checkCarrito($_SESSION['carrito'])){
 				// Guardar datos en bd
 				$pedido = new Pedido();
 				$pedido->setUsuario_id($usuario_id);
